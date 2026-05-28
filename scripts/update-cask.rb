@@ -6,9 +6,9 @@ require "json"
 require "net/http"
 require "uri"
 
-REPO = "jundot/omlx".freeze
+REPO = "jundot/omlx"
 CASK_PATH = File.expand_path("../Casks/omlx.rb", __dir__).freeze
-USER_AGENT = "homebrew-omlx-cask-updater".freeze
+USER_AGENT = "homebrew-omlx-cask-updater"
 
 def github_json(path)
   uri = URI("https://api.github.com/#{path}")
