@@ -1,0 +1,61 @@
+name: Update oMLX Cask
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_TAP: mikesplain/omlx
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Update cask metadata
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ruby scripts/update-cask.rb
+
+      - name: Configure local tap
+        run: brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
+
+      - name: Audit cask
+        run: brew audit --cask --strict --online --tap="$HOMEBREW_TAP" omlx
+
+      - name: Open update pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- Casks/omlx.rb; then
+            echo "No oMLX cask changes."
+            exit 0
+          fi
+
+          version="$(ruby -ne 'puts $1 if /^  version "([^"]+)"/' Casks/omlx.rb | head -n 1)"
+          branch="update/omlx-${version}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add Casks/omlx.rb
+          git commit -m "Update oMLX cask to ${version}"
+          git push --force-with-lease origin "$branch"
+
+          if gh pr view "$branch" --json number >/dev/null 2>&1; then
+            gh pr edit "$branch" \
+              --title "Update oMLX cask to ${version}" \
+              --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums."
+          else
+            gh pr create \
+              --base main \
+              --head "$branch" \
+              --title "Update oMLX cask to ${version}" \
+              --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums."
+          fi

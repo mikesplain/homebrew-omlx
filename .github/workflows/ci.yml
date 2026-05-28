@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  brew-audit:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_TAP: mikesplain/omlx
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure local tap
+        run: brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
+
+      - name: Audit cask
+        run: brew audit --cask --strict --online --tap="$HOMEBREW_TAP" omlx
+
+      - name: Style cask
+        run: brew style --cask "$HOMEBREW_TAP"
