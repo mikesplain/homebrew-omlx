@@ -7,7 +7,6 @@ cask "omlx" do
     url "https://github.com/jundot/omlx/releases/download/v#{version}/oMLX-#{version}-macos15-sequoia.dmg",
         verified: "github.com/jundot/omlx/"
   end
-
   on_tahoe :or_newer do
     sha256 "1da02c1353725329a0f44d40b440bcc78d3ccfa51e3818cdc7cd2504c4176c94"
 
@@ -16,7 +15,7 @@ cask "omlx" do
   end
 
   name "oMLX"
-  desc "macOS-native MLX inference server and menu bar app"
+  desc "MLX inference server and menu bar app"
   homepage "https://omlx.ai/"
 
   livecheck do

@@ -4,12 +4,11 @@
 require "digest"
 require "json"
 require "net/http"
-require "open-uri"
 require "uri"
 
-REPO = "jundot/omlx"
-CASK_PATH = File.expand_path("../Casks/omlx.rb", __dir__)
-USER_AGENT = "homebrew-omlx-cask-updater"
+REPO = "jundot/omlx".freeze
+CASK_PATH = File.expand_path("../Casks/omlx.rb", __dir__).freeze
+USER_AGENT = "homebrew-omlx-cask-updater".freeze
 
 def github_json(path)
   uri = URI("https://api.github.com/#{path}")
@@ -42,12 +41,28 @@ def asset_url(release, version, suffix)
   asset.fetch("browser_download_url")
 end
 
-def sha256_for(url)
+def sha256_for(url, redirects = 0)
+  if redirects > 5
+    warn "Too many redirects while downloading #{url}"
+    exit 1
+  end
+
+  uri = URI(url)
+  request = Net::HTTP::Get.new(uri)
+  request["User-Agent"] = USER_AGENT
   digest = Digest::SHA256.new
 
-  URI.open(url, "User-Agent" => USER_AGENT) do |io|
-    while (chunk = io.read(1024 * 1024))
-      digest.update(chunk)
+  Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+    http.request(request) do |response|
+      case response
+      when Net::HTTPRedirection
+        return sha256_for(URI.join(url, response["location"]).to_s, redirects + 1)
+      when Net::HTTPSuccess
+        response.read_body { |chunk| digest.update(chunk) }
+      else
+        warn "Download failed: #{response.code} #{url}"
+        exit 1
+      end
     end
   end
 
@@ -59,20 +74,20 @@ version = release.fetch("tag_name").delete_prefix("v")
 
 assets = {
   "macos15-sequoia" => asset_url(release, version, "macos15-sequoia"),
-  "macos26-tahoe" => asset_url(release, version, "macos26-tahoe"),
+  "macos26-tahoe"   => asset_url(release, version, "macos26-tahoe"),
 }
 
 shas = assets.transform_values { |url| sha256_for(url) }
 cask = File.read(CASK_PATH)
 
-cask = cask.sub(/version "\d+(?:\.\d+)+"/, %(version "#{version}"))
+cask = cask.sub(/version "\d+(?:\.\d+)+"/, %Q(version "#{version}"))
 cask = cask.sub(
   /on_sequoia :or_older do\n    sha256 "[0-9a-f]{64}"/,
-  %(on_sequoia :or_older do\n    sha256 "#{shas.fetch("macos15-sequoia")}")
+  %Q(on_sequoia :or_older do\n    sha256 "#{shas.fetch("macos15-sequoia")}"),
 )
 cask = cask.sub(
   /on_tahoe :or_newer do\n    sha256 "[0-9a-f]{64}"/,
-  %(on_tahoe :or_newer do\n    sha256 "#{shas.fetch("macos26-tahoe")}")
+  %Q(on_tahoe :or_newer do\n    sha256 "#{shas.fetch("macos26-tahoe")}"),
 )
 
 File.write(CASK_PATH, cask)

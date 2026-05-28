@@ -39,7 +39,7 @@ jobs:
             exit 0
           fi
 
-          version="$(ruby -ne 'puts $1 if /^  version "([^"]+)"/' Casks/omlx.rb | head -n 1)"
+          version="$(grep -E '^  version ' Casks/omlx.rb | cut -d '"' -f 2 | head -n 1)"
           branch="update/omlx-${version}"
 
           git config user.name "github-actions[bot]"
