@@ -69,6 +69,15 @@ def sha256_for(url, redirects = 0)
   digest.hexdigest
 end
 
+def replace!(content, pattern, replacement)
+  unless content.match?(pattern)
+    warn "Could not update cask; pattern did not match: #{pattern.inspect}"
+    exit 1
+  end
+
+  content.sub(pattern, replacement)
+end
+
 release = github_json("repos/#{REPO}/releases/latest")
 version = release.fetch("tag_name").delete_prefix("v")
 
@@ -80,12 +89,14 @@ assets = {
 shas = assets.transform_values { |url| sha256_for(url) }
 cask = File.read(CASK_PATH)
 
-cask = cask.sub(/version "\d+(?:\.\d+)+"/, %Q(version "#{version}"))
-cask = cask.sub(
+cask = replace!(cask, /^  version "[^"]+"/, %Q(  version "#{version}"))
+cask = replace!(
+  cask,
   /on_sequoia :or_older do\n    sha256 "[0-9a-f]{64}"/,
   %Q(on_sequoia :or_older do\n    sha256 "#{shas.fetch("macos15-sequoia")}"),
 )
-cask = cask.sub(
+cask = replace!(
+  cask,
   /on_tahoe :or_newer do\n    sha256 "[0-9a-f]{64}"/,
   %Q(on_tahoe :or_newer do\n    sha256 "#{shas.fetch("macos26-tahoe")}"),
 )

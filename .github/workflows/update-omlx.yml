@@ -19,16 +19,21 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v5
 
+      - name: Configure local tap
+        run: |
+          brew untap "$HOMEBREW_TAP" || true
+          brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
+
       - name: Update cask metadata
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ruby scripts/update-cask.rb
 
-      - name: Configure local tap
-        run: brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
+      - name: Sync generated cask to tap
+        run: cp Casks/omlx.rb "$(brew --repo "$HOMEBREW_TAP")/Casks/omlx.rb"
 
       - name: Audit cask
-        run: brew audit --cask --strict --online --tap="$HOMEBREW_TAP" omlx
+        run: brew audit --cask --strict --online "$HOMEBREW_TAP/omlx"
 
       - name: Open update pull request
         env:

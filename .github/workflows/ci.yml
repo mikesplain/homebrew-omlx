@@ -17,10 +17,12 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Configure local tap
-        run: brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
+        run: |
+          brew untap "$HOMEBREW_TAP" || true
+          brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
 
       - name: Audit cask
-        run: brew audit --cask --strict --online --tap="$HOMEBREW_TAP" omlx
+        run: brew audit --cask --strict --online "$HOMEBREW_TAP/omlx"
 
       - name: Style cask
-        run: brew style --cask "$HOMEBREW_TAP"
+        run: brew style Casks/omlx.rb
