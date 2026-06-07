@@ -52,6 +52,7 @@ jobs:
           git switch -c "$branch"
           git add Casks/omlx.rb
           git commit -m "Update oMLX cask to ${version}"
+          git fetch origin "$branch" 2>/dev/null || true
           git push --force-with-lease origin "$branch"
 
           if gh pr view "$branch" --json number >/dev/null 2>&1; then
