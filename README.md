@@ -1,5 +1,7 @@
 # homebrew-omlx
 
+[![CI](https://github.com/mikesplain/homebrew-omlx/actions/workflows/ci.yml/badge.svg)](https://github.com/mikesplain/homebrew-omlx/actions/workflows/ci.yml) [![Update oMLX Cask](https://github.com/mikesplain/homebrew-omlx/actions/workflows/update-omlx.yml/badge.svg)](https://github.com/mikesplain/homebrew-omlx/actions/workflows/update-omlx.yml)
+
 Dedicated Homebrew tap for the oMLX macOS app cask.
 
 This tap installs the signed oMLX app from upstream GitHub release DMGs with pinned SHA-256 checksums. Homebrew bottles are for formulae, not casks; for this app, the deterministic artifact is the upstream DMG plus checksum.
