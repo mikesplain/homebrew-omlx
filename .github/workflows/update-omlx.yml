@@ -1,6 +1,9 @@
 name: Update oMLX Cask
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
