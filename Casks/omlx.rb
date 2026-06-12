@@ -10,7 +10,7 @@ cask "omlx" do
   on_tahoe :or_newer do
     sha256 "6583bf2bba2bc91372c1a29c56e8b9a79131b0804d9f49549d6ef3287197938d"
 
-    url "https://github.com/jundot/omlx/releases/download/v#{version}/oMLX-#{version}-macos26-tahoe.dmg",
+    url "https://github.com/jundot/omlx/releases/download/v#{version}/oMLX-#{version}-macos26-27.dmg",
         verified: "github.com/jundot/omlx/"
   end
 

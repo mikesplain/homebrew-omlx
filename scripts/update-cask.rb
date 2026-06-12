@@ -83,7 +83,7 @@ version = release.fetch("tag_name").delete_prefix("v")
 
 assets = {
   "macos15-sequoia" => asset_url(release, version, "macos15-sequoia"),
-  "macos26-tahoe"   => asset_url(release, version, "macos26-tahoe"),
+  "macos26-27"      => asset_url(release, version, "macos26-27"),
 }
 
 shas = assets.transform_values { |url| sha256_for(url) }
@@ -98,7 +98,7 @@ cask = replace!(
 cask = replace!(
   cask,
   /on_tahoe :or_newer do\n    sha256 "[0-9a-f]{64}"/,
-  %Q(on_tahoe :or_newer do\n    sha256 "#{shas.fetch("macos26-tahoe")}"),
+  %Q(on_tahoe :or_newer do\n    sha256 "#{shas.fetch("macos26-27")}"),
 )
 
 File.write(CASK_PATH, cask)
