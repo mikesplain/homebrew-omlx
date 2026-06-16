@@ -26,3 +26,12 @@ jobs:
 
       - name: Style cask
         run: brew style Casks/omlx.rb
+
+      - name: Install cask
+        run: brew install --cask "$HOMEBREW_TAP/omlx"
+
+      - name: Verify installation
+        run: test -d "$(brew --prefix)/Caskrooms/omlx/Applications/oMLX.app"
+
+      - name: Uninstall cask
+        run: brew uninstall --cask "$HOMEBREW_TAP/omlx"
