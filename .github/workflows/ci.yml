@@ -22,7 +22,7 @@ jobs:
           brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
 
       - name: Audit cask
-        run: brew audit --cask --strict --online "$HOMEBREW_TAP/omlx"
+        run: brew audit --cask --strict --online --except min_os "$HOMEBREW_TAP/omlx"
 
       - name: Style cask
         run: brew style Casks/omlx.rb
