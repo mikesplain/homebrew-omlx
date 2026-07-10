@@ -78,7 +78,8 @@ def replace!(content, pattern, replacement)
   content.sub(pattern, replacement)
 end
 
-release = github_json("repos/#{REPO}/releases/latest")
+releases = github_json("repos/#{REPO}/releases?per_page=1")
+release = releases.first
 version = release.fetch("tag_name").delete_prefix("v")
 
 assets = {
