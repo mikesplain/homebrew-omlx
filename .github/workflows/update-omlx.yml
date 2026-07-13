@@ -61,11 +61,13 @@ jobs:
           if gh pr view "$branch" --json number >/dev/null 2>&1; then
             gh pr edit "$branch" \
               --title "Update oMLX cask to ${version}" \
-              --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums."
+              --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums." \
+              --assignee mikesplain
           else
             gh pr create \
               --base main \
               --head "$branch" \
               --title "Update oMLX cask to ${version}" \
-              --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums."
+              --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums." \
+              --assignee mikesplain
           fi
