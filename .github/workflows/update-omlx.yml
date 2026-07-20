@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
@@ -39,6 +40,7 @@ jobs:
         run: brew audit --cask --online --except min_os,livecheck_version,hosting_with_livecheck,github_prerelease_version "$HOMEBREW_TAP/omlx"
 
       - name: Open update pull request
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
