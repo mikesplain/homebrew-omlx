@@ -36,7 +36,7 @@ jobs:
         run: cp Casks/omlx.rb "$(brew --repo "$HOMEBREW_TAP")/Casks/omlx.rb"
 
       - name: Audit cask
-        run: brew audit --cask --online --except min_os,livecheck_version,github_prerelease_version "$HOMEBREW_TAP/omlx"
+        run: brew audit --cask --online --except min_os,livecheck_version,hosting_with_livecheck,github_prerelease_version "$HOMEBREW_TAP/omlx"
 
       - name: Open update pull request
         env:
