@@ -19,9 +19,9 @@ cask "omlx" do
   homepage "https://omlx.ai/"
 
   livecheck do
-    url "https://github.com/jundot/omlx/releases/latest"
+    url "https://github.com/jundot/omlx/releases"
     regex(/^v?(\d+(?:\.\d+)+(?:[._-]?(?:dev|rc|post)\d*)?)$/i)
-    strategy :github_latest
+    strategy :github_releases
   end
 
   auto_updates true
