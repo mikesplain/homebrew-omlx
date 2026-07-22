@@ -64,7 +64,6 @@ jobs:
             gh pr edit "$branch" \
               --title "Update oMLX cask to ${version}" \
               --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums." \
-              --assignee mikesplain
           else
             gh pr create \
               --base main \
