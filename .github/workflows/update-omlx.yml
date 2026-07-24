@@ -60,10 +60,11 @@ jobs:
           git fetch origin "$branch" 2>/dev/null || true
           git push --force-with-lease origin "$branch"
 
-          if gh pr view "$branch" --json number >/dev/null 2>&1; then
-            gh pr edit "$branch" \
+          pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' 2>/dev/null)
+          if [[ -n "$pr_number" ]]; then
+            gh pr edit "$pr_number" \
               --title "Update oMLX cask to ${version}" \
-              --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums." \
+              --body "Updates the oMLX cask to ${version} and refreshes both macOS DMG checksums."
           else
             gh pr create \
               --base main \
