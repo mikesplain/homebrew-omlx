@@ -1,14 +1,14 @@
 cask "omlx" do
-  version "0.5.4.dev1"
+  version "0.5.4rc1"
 
   on_sequoia :or_older do
-    sha256 "9a7ae1021b34662340645ace9d3a74d6d8047a37384d2c1d4943b1cd75096ca0"
+    sha256 "c97acde5753dfa24a6078190c9834313ebf123a7d87e5bf90779d646a17902d4"
 
     url "https://github.com/jundot/omlx/releases/download/v#{version}/oMLX-#{version}-macos15-sequoia.dmg",
         verified: "github.com/jundot/omlx/"
   end
   on_tahoe :or_newer do
-    sha256 "b06a666f6f4448919366f55f78fa77c406c992d55e59f118a4046d841a5904ef"
+    sha256 "0e7771c8174ff13587af880ddcb009d3b92a18b47c7c10cf8448f8775363741b"
 
     url "https://github.com/jundot/omlx/releases/download/v#{version}/oMLX-#{version}-macos26-27.dmg",
         verified: "github.com/jundot/omlx/"
