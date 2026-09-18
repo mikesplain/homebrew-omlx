@@ -1,0 +1,23 @@
+name: Trigger dotfiles flake update
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch flake-update event to dotfiles
+        env:
+          GH_TOKEN: ${{ secrets.DOTFILES_DISPATCH_TOKEN }}
+        run: |
+          gh api repos/mikesplain/dotfiles/dispatches \
+            -X POST \
+            -f event_type=flake-update \
+            -f "client_payload[source_repo]=${GITHUB_REPOSITORY}" \
+            -f "client_payload[source_ref]=${GITHUB_REF_NAME}"
