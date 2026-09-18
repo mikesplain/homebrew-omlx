@@ -32,6 +32,25 @@ brew install omlx
 4. Runs `brew audit`.
 5. Opens or updates a pull request when the cask changes.
 
+## Upgrading on a running system
+
+`brew upgrade --cask omlx` stops any running oMLX app (and the `omlx-server`
+process it spawns) before replacing the bundle.
+
+oMLX is a persistent menu bar app that intentionally ignores the standard
+`quit` Apple event, so the cask keeps the graceful `uninstall quit:` stanza
+(used automatically if upstream ever honors it) and adds Homebrew's documented
+`signal:` fallback. Because `signal` is skipped during `brew upgrade` and
+`brew reinstall` by default, the cask opts in explicitly with
+`on_upgrade: :signal`.
+
+Consequences of the signal fallback:
+
+- oMLX is **not** relaunched automatically after the upgrade — Homebrew only
+  reopens apps it quit gracefully. Relaunch it from the menu bar after upgrading.
+- The cask requires a modern Homebrew that understands the `on_upgrade` key
+  (added in Homebrew/brew#21130); older Homebrew versions fail to load it.
+
 ## Local Validation
 
 ```sh
