@@ -33,8 +33,8 @@ cask "omlx" do
   # opts the fallback into `brew upgrade`/`brew reinstall`, where `signal` is
   # skipped by default.
   uninstall quit:       "app.omlx",
-           signal:       ["TERM", "app.omlx"],
-           on_upgrade:   :signal
+            signal:     ["TERM", "app.omlx"],
+            on_upgrade: :signal
 
   zap trash: [
     "~/.omlx",
