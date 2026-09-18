@@ -28,7 +28,13 @@ cask "omlx" do
 
   app "oMLX.app"
 
-  uninstall quit: "app.omlx"
+  # oMLX is a persistent menu bar app that intentionally ignores the standard quit
+  # Apple event, so the documented signal fallback is required. `on_upgrade: :signal`
+  # opts the fallback into `brew upgrade`/`brew reinstall`, where `signal` is
+  # skipped by default.
+  uninstall quit:       "app.omlx",
+           signal:       ["TERM", "app.omlx"],
+           on_upgrade:   :signal
 
   zap trash: [
     "~/.omlx",
