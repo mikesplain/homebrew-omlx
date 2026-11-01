@@ -27,6 +27,8 @@ jobs:
         run: |
           brew untap "$HOMEBREW_TAP" || true
           brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
+          # Homebrew no longer trusts taps by default; trust it so the cask can be audited/installed.
+          brew trust "$HOMEBREW_TAP"
 
       - name: Update cask metadata
         env:

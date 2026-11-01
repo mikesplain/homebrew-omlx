@@ -20,6 +20,8 @@ jobs:
         run: |
           brew untap "$HOMEBREW_TAP" || true
           brew tap "$HOMEBREW_TAP" "$GITHUB_WORKSPACE"
+          # Homebrew no longer trusts taps by default; trust it so the cask can be audited/installed.
+          brew trust "$HOMEBREW_TAP"
 
       - name: Audit cask
         run: brew audit --cask --strict --online --except min_os,livecheck_version,livecheck_https_availability,hosting_with_livecheck,github_prerelease_version "$HOMEBREW_TAP/omlx"
